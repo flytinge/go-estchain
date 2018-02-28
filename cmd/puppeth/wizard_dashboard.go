@@ -112,7 +112,7 @@ func (w *wizard) deployDashboard() {
 			// No service hosting for this
 		}
 	}
-	// If we have ethstats running, ask whester to make the secret public or not
+	// If we have ethstats running, ask whether to make the secret public or not
 	var ethstats bool
 	if w.conf.ethstats != "" {
 		fmt.Println()

@@ -86,7 +86,7 @@ type Config struct {
 	DatabaseCache      int
 
 	// Mining-related options
-	Esterbase    common.Address `toml:",omitempty"`
+	Etherbase    common.Address `toml:",omitempty"`
 	MinerThreads int            `toml:",omitempty"`
 	ExtraData    []byte         `toml:",omitempty"`
 	GasPrice     *big.Int

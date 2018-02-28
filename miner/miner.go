@@ -53,8 +53,8 @@ type Miner struct {
 	eth      Backend
 	engine   consensus.Engine
 
-	canStart    int32 // can start indicates whester we can start the mining operation
-	shouldStart int32 // should start indicates whester we should start after sync
+	canStart    int32 // can start indicates whether we can start the mining operation
+	shouldStart int32 // should start indicates whether we should start after sync
 }
 
 func New(eth Backend, config *params.ChainConfig, mux *event.TypeMux, engine consensus.Engine) *Miner {
@@ -105,7 +105,7 @@ out:
 
 func (self *Miner) Start(coinbase common.Address) {
 	atomic.StoreInt32(&self.shouldStart, 1)
-	self.worker.setEsterbase(coinbase)
+	self.worker.setEtherbase(coinbase)
 	self.coinbase = coinbase
 
 	if atomic.LoadInt32(&self.canStart) == 0 {
@@ -177,7 +177,7 @@ func (self *Miner) PendingBlock() *types.Block {
 	return self.worker.pendingBlock()
 }
 
-func (self *Miner) SetEsterbase(addr common.Address) {
+func (self *Miner) SetEtherbase(addr common.Address) {
 	self.coinbase = addr
-	self.worker.setEsterbase(addr)
+	self.worker.setEtherbase(addr)
 }

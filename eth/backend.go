@@ -86,12 +86,12 @@ type Estchain struct {
 
 	miner     *miner.Miner
 	gasPrice  *big.Int
-	esterbase common.Address
+	etherbase common.Address
 
 	networkId     uint64
 	netRPCService *ethapi.PublicNetAPI
 
-	lock sync.RWMutex // Protects the variadic fields (e.g. gas price and esterbase)
+	lock sync.RWMutex // Protects the variadic fields (e.g. gas price and etherbase)
 }
 
 func (s *Estchain) AddLesServer(ls LesServer) {
@@ -130,7 +130,7 @@ func New(ctx *node.ServiceContext, config *Config) (*Estchain, error) {
 		stopDbUpgrade:  stopDbUpgrade,
 		networkId:      config.NetworkId,
 		gasPrice:       config.GasPrice,
-		esterbase:      config.Esterbase,
+		etherbase:      config.Etherbase,
 		bloomRequests:  make(chan chan *bloombits.Retrieval),
 		bloomIndexer:   NewBloomIndexer(chainDb, params.BloomBitsBlocks),
 	}
@@ -294,41 +294,41 @@ func (s *Estchain) ResetWithGenesisBlock(gb *types.Block) {
 	s.blockchain.ResetWithGenesisBlock(gb)
 }
 
-func (s *Estchain) Esterbase() (eb common.Address, err error) {
+func (s *Estchain) Etherbase() (eb common.Address, err error) {
 	s.lock.RLock()
-	esterbase := s.esterbase
+	etherbase := s.etherbase
 	s.lock.RUnlock()
 
-	if esterbase != (common.Address{}) {
-		return esterbase, nil
+	if etherbase != (common.Address{}) {
+		return etherbase, nil
 	}
 	if wallets := s.AccountManager().Wallets(); len(wallets) > 0 {
 		if accounts := wallets[0].Accounts(); len(accounts) > 0 {
 			return accounts[0].Address, nil
 		}
 	}
-	return common.Address{}, fmt.Errorf("esterbase address must be explicitly specified")
+	return common.Address{}, fmt.Errorf("etherbase address must be explicitly specified")
 }
 
 // set in js console via admin interface or wrapper from cli flags
-func (self *Estchain) SetEsterbase(esterbase common.Address) {
+func (self *Estchain) SetEtherbase(etherbase common.Address) {
 	self.lock.Lock()
-	self.esterbase = esterbase
+	self.etherbase = etherbase
 	self.lock.Unlock()
 
-	self.miner.SetEsterbase(esterbase)
+	self.miner.SetEtherbase(etherbase)
 }
 
 func (s *Estchain) StartMining(local bool) error {
-	eb, err := s.Esterbase()
+	eb, err := s.Etherbase()
 	if err != nil {
-		log.Error("Cannot start mining without esterbase", "err", err)
-		return fmt.Errorf("esterbase missing: %v", err)
+		log.Error("Cannot start mining without etherbase", "err", err)
+		return fmt.Errorf("etherbase missing: %v", err)
 	}
 	if clique, ok := s.engine.(*clique.Clique); ok {
 		wallet, err := s.accountManager.Find(accounts.Account{Address: eb})
 		if wallet == nil || err != nil {
-			log.Error("Esterbase account unavailable locally", "err", err)
+			log.Error("Etherbase account unavailable locally", "err", err)
 			return fmt.Errorf("signer missing: %v", err)
 		}
 		clique.Authorize(eb, wallet.SignHash)

@@ -77,7 +77,7 @@ This command will:
 Transitioning towards developers, if you'd like to play around with creating Estchain contracts, you
 almost certainly would like to do that without any real money involved until you get the hang of the
 entire system. In other words, instead of attaching to the main network, you want to join the **test**
-network with your node, which is fully equivalent to the main network, but with play-Ester only.
+network with your node, which is fully equivalent to the main network, but with play-Ether only.
 
 ```
 $ geth --testnet --fast --cache=512 console
@@ -254,7 +254,7 @@ need to configure a miner to process transactions and create new blocks for you.
 
 Mining on the public Estchain network is a complex task as it's only feasible using GPUs, requiring
 an OpenCL or CUDA enabled `ethminer` instance. For information on such a setup, please consult the
-[EsterMining subreddit](https://www.reddit.com/r/EsterMining/) and the [Genoil miner](https://github.com/Genoil/cpp-estchain)
+[EtherMining subreddit](https://www.reddit.com/r/EtherMining/) and the [Genoil miner](https://github.com/Genoil/cpp-estchain)
 repository.
 
 In a private network setting however, a single CPU miner instance is more than enough for practical
@@ -263,11 +263,11 @@ resources (consider running on a single thread, no need for multiple ones either
 instance for mining, run it with all your usual flags, extended by:
 
 ```
-$ geth <usual-flags> --mine --minerthreads=1 --esterbase=0x0000000000000000000000000000000000000000
+$ geth <usual-flags> --mine --minerthreads=1 --etherbase=0x0000000000000000000000000000000000000000
 ```
 
 Which will start mining blocks and transactions on a single CPU thread, crediting all proceedings to
-the account specified by `--esterbase`. You can further tune the mining by changing the default gas
+the account specified by `--etherbase`. You can further tune the mining by changing the default gas
 limit blocks converge to (`--targetgaslimit`) and the price transactions are accepted at (`--gasprice`).
 
 ## Contribution

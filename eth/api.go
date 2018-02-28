@@ -56,14 +56,14 @@ func NewPublicEstchainAPI(e *Estchain) *PublicEstchainAPI {
 	return &PublicEstchainAPI{e}
 }
 
-// Esterbase is the address that mining rewards will be send to
-func (api *PublicEstchainAPI) Esterbase() (common.Address, error) {
-	return api.e.Esterbase()
+// Etherbase is the address that mining rewards will be send to
+func (api *PublicEstchainAPI) Etherbase() (common.Address, error) {
+	return api.e.Etherbase()
 }
 
-// Coinbase is the address that mining rewards will be send to (alias for Esterbase)
+// Coinbase is the address that mining rewards will be send to (alias for Etherbase)
 func (api *PublicEstchainAPI) Coinbase() (common.Address, error) {
-	return api.Esterbase()
+	return api.Etherbase()
 }
 
 // Hashrate returns the POW hashrate
@@ -194,9 +194,9 @@ func (api *PrivateMinerAPI) SetGasPrice(gasPrice hexutil.Big) bool {
 	return true
 }
 
-// SetEsterbase sets the esterbase of the miner
-func (api *PrivateMinerAPI) SetEsterbase(esterbase common.Address) bool {
-	api.e.SetEsterbase(esterbase)
+// SetEtherbase sets the etherbase of the miner
+func (api *PrivateMinerAPI) SetEtherbase(etherbase common.Address) bool {
+	api.e.SetEtherbase(etherbase)
 	return true
 }
 

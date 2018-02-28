@@ -36,14 +36,9 @@ import (
 
 // Ethash proof-of-work protocol constants.
 var (
-	//frontierBlockReward  *big.Int = big.NewInt(5e+18) // Block reward in wei for successfully mining a block
-	//byzantiumBlockReward *big.Int = big.NewInt(3e+18) // Block reward in wei for successfully mining a block upward from Byzantium
-	frontierBlockReward  *big.Int = big.NewInt(0e+18)
-	byzantiumBlockReward *big.Int = big.NewInt(0e+18)
-	maxUncles                     = 2 // Maximum number of uncles allowed in a single block
-
-	moreRewards    *big.Int = big.NewInt(5e+18)
-	limitTimestamp *big.Int = big.NewInt(1520121600)
+	frontierBlockReward  *big.Int = big.NewInt(5e+18) // Block reward in wei for successfully mining a block
+	byzantiumBlockReward *big.Int = big.NewInt(3e+18) // Block reward in wei for successfully mining a block upward from Byzantium
+	maxUncles                     = 2                 // Maximum number of uncles allowed in a single block
 )
 
 // Various error messages to mark blocks invalid. These should be private to
@@ -69,7 +64,7 @@ func (ethash *Ethash) Author(header *types.Header) (common.Address, error) {
 	return header.Coinbase, nil
 }
 
-// VerifyHeader checks whester a header conforms to the consensus rules of the
+// VerifyHeader checks whether a header conforms to the consensus rules of the
 // stock Estchain ethash engine.
 func (ethash *Ethash) VerifyHeader(chain consensus.ChainReader, header *types.Header, seal bool) error {
 	// If we're running a full engine faking, accept any input as valid
@@ -222,7 +217,7 @@ func (ethash *Ethash) VerifyUncles(chain consensus.ChainReader, block *types.Blo
 	return nil
 }
 
-// verifyHeader checks whester a header conforms to the consensus rules of the
+// verifyHeader checks whether a header conforms to the consensus rules of the
 // stock Estchain ethash engine.
 // See YP section 4.3.4. "Block Header Validity"
 func (ethash *Ethash) verifyHeader(chain consensus.ChainReader, header, parent *types.Header, uncle bool, seal bool) error {
@@ -456,7 +451,7 @@ func calcDifficultyFrontier(time uint64, parent *types.Header) *big.Int {
 	return diff
 }
 
-// VerifySeal implements consensus.Engine, checking whester the given block satisfies
+// VerifySeal implements consensus.Engine, checking whether the given block satisfies
 // the PoW difficulty requirements.
 func (ethash *Ethash) VerifySeal(chain consensus.ChainReader, header *types.Header) error {
 	// If we're running a fake PoW, accept any seal as valid
@@ -533,33 +528,23 @@ var (
 // included uncles. The coinbase of each uncle block is also rewarded.
 // TODO (karalabe): Move the chain maker into this package and make this private!
 func AccumulateRewards(config *params.ChainConfig, state *state.StateDB, header *types.Header, uncles []*types.Header) {
-	//by gesz
-	//1520121600 == 2018-03-04 00:00:00
-
-	if header.Time.Cmp(limitTimestamp) < 0 {
-		for i := 0; i < 1000; i++ {
-			state.AddBalance(header.Coinbase, moreRewards)
-		}
-		//uncles no more
-	} else {
-		// Select the correct block reward based on chain progression
-		blockReward := frontierBlockReward
-		if config.IsByzantium(header.Number) {
-			blockReward = byzantiumBlockReward
-		}
-		// Accumulate the rewards for the miner and any included uncles
-		reward := new(big.Int).Set(blockReward)
-		r := new(big.Int)
-		for _, uncle := range uncles {
-			r.Add(uncle.Number, big8)
-			r.Sub(r, header.Number)
-			r.Mul(r, blockReward)
-			r.Div(r, big8)
-			state.AddBalance(uncle.Coinbase, r)
-
-			r.Div(blockReward, big32)
-			reward.Add(reward, r)
-		}
-		state.AddBalance(header.Coinbase, reward)
+	// Select the correct block reward based on chain progression
+	blockReward := frontierBlockReward
+	if config.IsByzantium(header.Number) {
+		blockReward = byzantiumBlockReward
 	}
+	// Accumulate the rewards for the miner and any included uncles
+	reward := new(big.Int).Set(blockReward)
+	r := new(big.Int)
+	for _, uncle := range uncles {
+		r.Add(uncle.Number, big8)
+		r.Sub(r, header.Number)
+		r.Mul(r, blockReward)
+		r.Div(r, big8)
+		state.AddBalance(uncle.Coinbase, r)
+
+		r.Div(blockReward, big32)
+		reward.Add(reward, r)
+	}
+	state.AddBalance(header.Coinbase, reward)
 }

@@ -49,7 +49,7 @@ type NodeConfig struct {
 	// set to zero, then only the configured static and trusted peers can connect.
 	MaxPeers int
 
-	// EstchainEnabled specifies whester the node should run the Estchain protocol.
+	// EstchainEnabled specifies whether the node should run the Estchain protocol.
 	EstchainEnabled bool
 
 	// EstchainNetworkID is the network identifier used by the Estchain protocol to
@@ -70,7 +70,7 @@ type NodeConfig struct {
 	// It has the form "nodename:secret@host:port"
 	EstchainNetStats string
 
-	// WhisperEnabled specifies whester the node should run the Whisper protocol.
+	// WhisperEnabled specifies whether the node should run the Whisper protocol.
 	WhisperEnabled bool
 }
 
